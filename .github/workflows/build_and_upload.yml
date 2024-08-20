@@ -1,4 +1,4 @@
-name: Build and upload to PyPI
+name: Build
 
 on:
   push:
@@ -47,23 +47,3 @@ jobs:
       - uses: "actions/upload-artifact@v3"
         with:
           path: "./dist/*.tar.gz"
-
-  upload_to_pypi:
-    name: "Upload to PyPI"
-    runs-on: ubuntu-latest
-    if: github.event_name == 'release' && github.event.action == 'published'
-    needs:
-      - build_wheels
-      - make_sdist
-    steps:
-      - uses: "actions/download-artifact@v3"
-        with:
-          name: artifact
-          path: dist
-      - uses: "pypa/gh-action-pypi-publish@v1.8.10"
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_TOKEN }}
-          print_hash: true
-          verbose: true
-          skip_existing: true
